@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>The Frequency Map</title>
+<style>
+:root{--ink:#f3ead8;--dim:#b9ad98;--amber:#ffc07a;--rule:rgba(255,255,255,.14);--serif:Georgia,'Times New Roman',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+html,body{margin:0;height:100%;background:#07050a;color:var(--ink);overflow:hidden;-webkit-tap-highlight-color:transparent}
+#world{position:fixed;inset:0;width:100%;height:100%;border:0;display:block;background:#07050a}
+#fade{position:fixed;inset:0;background:#07050a;opacity:0;pointer-events:none;transition:opacity .7s ease;display:flex;align-items:center;justify-content:center;padding:0 28px;z-index:20}
+#fade.on{opacity:1;pointer-events:auto}
+#fade p{max-width:520px;margin:0;font:italic 19px/1.5 var(--serif);text-align:center;color:var(--ink);opacity:.92}
+#map{position:fixed;inset:0;z-index:30;overflow-y:auto;-webkit-overflow-scrolling:touch;background:radial-gradient(120% 80% at 50% 0%,#2a1d3a 0%,#120c1a 55%,#07050a 100%)}
+#map.hide{display:none}
+.wrap{max-width:520px;margin:0 auto;padding:calc(30px + env(safe-area-inset-top)) 22px calc(40px + env(safe-area-inset-bottom))}
+.kick{font:11px/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin:0 0 10px}
+h1{font:400 34px/1.1 var(--serif);margin:0 0 10px;color:var(--ink)}
+.lede{font:16px/1.5 var(--sans);color:var(--dim);margin:0 0 26px}
+.st{display:block;width:100%;text-align:left;border:1px solid var(--rule);background:rgba(255,255,255,.04);color:var(--ink);border-radius:14px;padding:16px 16px 15px;cursor:pointer;font:inherit}
+.st:active{background:rgba(255,255,255,.09)}
+.st b{display:block;font:400 21px/1.2 var(--serif);margin-bottom:5px}
+.st span{display:block;font:14px/1.45 var(--sans);color:var(--dim)}
+.st i{display:inline-block;font:normal 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:8px}
+.st.here{border-color:rgba(255,192,122,.6)}
+.link{display:flex;gap:12px;align-items:stretch;padding:0 0 0 22px;margin:0}
+.link .ln{width:2px;background:linear-gradient(var(--amber),rgba(255,192,122,.25));margin:4px 0;flex:none}
+.link p{font:italic 15px/1.45 var(--serif);color:#e8d9c0;margin:12px 0}
+.row{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+.btn{font:500 15px/1 var(--sans);border-radius:999px;padding:13px 20px;cursor:pointer;border:1px solid var(--rule);background:rgba(255,255,255,.06);color:var(--ink)}
+.btn.pri{background:var(--ink);color:#111;border-color:var(--ink)}
+.btn.hide{display:none}
+.foot{font:13px/1.5 var(--sans);color:var(--dim);margin-top:22px}
+</style>
+</head>
+<body>
+<iframe id="world" title="World" allow="autoplay; fullscreen; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+<div id="fade"><p id="fadeText"></p></div>
+<div id="map">
+ <div class="wrap">
+  <p class="kick">Three worlds, one way through</p>
+  <h1>The Frequency Map</h1>
+  <p class="lede">The beach, the jazz club and the record shop, joined by doors. Start anywhere. Each world is the same as before.</p>
+  <button class="st" type="button" data-w="beach"><i>Start here</i><b>Hallucination of Love</b><span>Beach Edition. The campfire, the waterfall, the lines in the sky, and the cave with the two stone beds.</span></button>
+  <div class="link"><div class="ln"></div><p>In the cave, beside the glowing stones: a secret door. Stone steps go down to the jazz club.</p></div>
+  <button class="st" type="button" data-w="jazz"><i>Down the steps</i><b>The Digital Jazz Club</b><span>The bar, the stage, the jukebox, the back room and Miles’s room upstairs. The front door goes back up the cave steps.</span></button>
+  <div class="link"><div class="ln"></div><p>On the record shelf by the stage, one mustard-yellow record sticks out. Pull it, and the shelf slides open.</p></div>
+  <button class="st" type="button" data-w="shop"><i>Behind the shelf</i><b>The Record Shop</b><span>The crates, Screamin’ Jay, Gerald’s Lounge and the Sockenplaylist. A small wooden door beside the stairs goes back to the jazz club.</span></button>
+  <div class="row"><button class="btn pri hide" id="back" type="button">Back to where you were</button></div>
+  <p class="foot">Tap Map in any world to come back here.</p>
+ </div>
+</div>
+<script>
+/*%%FMAP_DATA%%*/
+(function(){
+var TRANS={'beach>jazz':'Behind the stone door, steps go down into the rock. It gets warmer with every step, and then you hear a saxophone.',
+ 'jazz>beach':'Up the stone steps, through the rock. The music fades behind you, and then: the sea.',
+ 'jazz>shop':'Through the passage behind the shelf. Records stacked along the walls, a faint crackle up ahead.',
+ 'shop>jazz':'Through the little door and along the passage. Somewhere ahead, a piano.'};
+var DOORS={beach:{jazz:1},jazz:{beach:1,shop:1},shop:{jazz:1}};
+var frame=document.getElementById('world'),fade=document.getElementById('fade'),fadeText=document.getElementById('fadeText'),map=document.getElementById('map'),back=document.getElementById('back');
+var cur=null,busy=false;
+function build(w,arrive){var s=FMAP_DATA[w].split('%%FMAP_ARRIVE%%').join(JSON.stringify(arrive||null));var t='%%FMAP_THREE%%',i=s.indexOf(t);return s.slice(0,i)+FMAP_DATA.three+s.slice(i+t.length);}
+function mark(){[].forEach.call(document.querySelectorAll('.st'),function(b){b.classList.toggle('here',b.getAttribute('data-w')===cur);});back.classList.toggle('hide',!cur);}
+function load(w,arrive,text){if(busy)return;busy=true;fadeText.textContent=text||'';fade.classList.add('on');
+ setTimeout(function(){map.classList.add('hide');var done=false;frame.onload=function(){if(done)return;done=true;setTimeout(function(){fade.classList.remove('on');busy=false;try{frame.contentWindow.focus();}catch(e){}},text?900:300);};
+  frame.srcdoc=build(w,arrive);cur=w;mark();try{history.replaceState(null,'','#'+w);}catch(e){}
+  setTimeout(function(){if(!done){done=true;fade.classList.remove('on');busy=false;}},12000);},text?1100:350);}
+window.FMAP_SHELL={load:load,get cur(){return cur;},get busy(){return busy;}};
+addEventListener('message',function(e){var d=e.data;if(!d||!d.fmap||e.source!==frame.contentWindow)return;
+ if(d.fmap==='map'){mark();map.classList.remove('hide');map.scrollTop=0;return;}
+ if(d.fmap==='go'&&cur&&DOORS[cur]&&DOORS[cur][d.to]){load(d.to,cur,TRANS[cur+'>'+d.to]);}});
+[].forEach.call(document.querySelectorAll('.st'),function(b){b.onclick=function(){var w=b.getAttribute('data-w');if(w===cur){map.classList.add('hide');return;}load(w,null,'');};});
+back.onclick=function(){map.classList.add('hide');try{frame.contentWindow.focus();}catch(e){}};
+var h=(location.hash||'').slice(1);if(FMAP_DATA[h]&&h!=='three')load(h,null,'');
+})();
+</script>
+</body>
+</html>
