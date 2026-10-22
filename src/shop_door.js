@@ -1,5 +1,6 @@
-// ---------- The Frequency Map: a small wooden door to the jazz club (front wall, right of the stairs) ----------
-var JAZZDOOR=(function(){var g=new THREE.Group();g.position.set(3.45,F,-5.1);g.rotation.y=Math.PI;scene.add(g);
+// ---------- The Frequency Map: a small wooden door to the jazz club (Gerald's lounge, on the wall right of the doorway from the shop) ----------
+// v2: moved out of the corner behind the counter, where you arrived boxed in and could not walk
+var JAZZDOOR=(function(){var g=new THREE.Group();g.position.set(3.6,F,-14.8);g.rotation.y=Math.PI;scene.add(g);
  var lm=function(c){return new THREE.MeshLambertMaterial({color:c});};
  [[-0.5,1.04,0.08,2.08],[0.5,1.04,0.08,2.08],[0,2.1,1.08,0.08]].forEach(function(f){var m=new THREE.Mesh(new THREE.BoxGeometry(f[2],f[3],0.06),lm(0x2a1a10));m.position.set(f[0],f[1],0.03);g.add(m);});
  var hole=new THREE.Group();hole.visible=false;g.add(hole);
@@ -17,9 +18,9 @@ var JAZZDOOR=(function(){var g=new THREE.Group();g.position.set(3.45,F,-5.1);g.r
  return {g:g,piv:piv,hole:hole,open:false};})();
 function jazzDoorTo(v,ms,done){var a=JAZZDOOR.piv.rotation.y/1.3,t0=performance.now();(function an(){var k=Math.min(1,(performance.now()-t0)/ms),e=k*k*(3-2*k);JAZZDOOR.piv.rotation.y=1.3*(a+(v-a)*e);if(k<1)requestAnimationFrame(an);else if(done)done();})();}
 function toJazzClub(){if(JAZZDOOR.open)return;JAZZDOOR.open=true;closeAll();JAZZDOOR.hole.visible=true;caption('The little door creaks open. Behind it, a narrow passage, records stacked along the walls, and far ahead, a piano.',6000);jazzDoorTo(1,1200);setTimeout(function(){if(window.FMAP)window.FMAP.go('jazz');},1700);}
-SPOTS.push({k:'jazzdoor',x:3.45,z:-5.5,r:.85,label:'Go through to the jazz club',fn:toJazzClub});
+SPOTS.push({k:'jazzdoor',x:3.6,z:-15.4,r:.8,label:'Go through to the jazz club',fn:toJazzClub});
 // arriving from the jazz club
-if(window.FMAP_ARRIVE==='jazz'){setTimeout(function(){$('bWalk').onclick();doorOpen=true;enteredShop=true;P.sit=false;P.x=3.45;P.z=-5.5;P.y=F;P.yaw=.55;P.pitch=-.05;
+if(window.FMAP_ARRIVE==='jazz'){setTimeout(function(){$('bWalk').onclick();doorOpen=true;enteredShop=true;P.sit=false;P.x=2.9;P.z=-16.2;P.y=F;P.yaw=1.05;P.pitch=-.08;
  JAZZDOOR.piv.rotation.y=1.3;JAZZDOOR.hole.visible=true;JAZZDOOR.open=true;
- setTimeout(function(){caption('You come out of the passage through a small wooden door, right beside the stairs. Records everywhere, two disco balls turning. The record shop.',8000);},500);
+ setTimeout(function(){caption('You come out of the passage through a small wooden door, into Gerald\u2019s lounge. Gerald on his red couch, a dinosaur documentary on the big screen. The record shop is through the doorway on your left.',8000);},500);
  setTimeout(function(){jazzDoorTo(0,1300,function(){JAZZDOOR.hole.visible=false;JAZZDOOR.open=false;});},1500);},60);}

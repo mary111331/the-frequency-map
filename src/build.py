@@ -77,7 +77,7 @@ jazz = prep(os.path.join(H, 'jazz_build/index.html'), [
 # ---------------- record shop ----------------
 shop = prep(os.path.join(H, 'the-record-shop-dino.html'), [
     ("$('help').innerHTML='<p><b>How it works</b></p>';",
-     "PLACES.push(['The door to the jazz club','Front wall, right of the stairs: the passage to the jazz club',3.45,-5.5,Math.PI,-.05,true]);HELP.push('Front wall, right of the stairs: a small wooden door. Behind it, a passage leads to the jazz club.');\n$('help').innerHTML='<p><b>How it works</b></p>';"),
+     "PLACES.push(['The door to the jazz club','Gerald\\u2019s lounge, right of the doorway: the passage to the jazz club',3.5,-15.75,Math.PI,-.05,true]);HELP.push('In Gerald\\u2019s lounge, right of the doorway from the shop: a small wooden door. Behind it, a passage leads to the jazz club.');\n$('help').innerHTML='<p><b>How it works</b></p>';"),
     ("window.__shop={scene:scene,camera:camera,P:P,open:openDoor,", P('shop_door.js') + "window.__shop={jazzDoor:JAZZDOOR,spots:SPOTS,free:free,scene:scene,camera:camera,P:P,open:openDoor,"),
 ], 'shop')
 

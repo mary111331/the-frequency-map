@@ -9,7 +9,7 @@ Open it: https://mary111331.github.io/the-frequency-map/
 - **Beach to jazz club:** in the cave, beside the glowing stones, there is a secret door in the rock. Stone steps go down to the jazz club.
 - **Jazz club to beach:** the front door of the club leads back up the cave steps.
 - **Jazz club to record shop:** on the record shelf by the stage, one mustard-yellow record sticks out. Pull it, and the shelf slides open.
-- **Record shop to jazz club:** a small wooden door on the front wall, right of the stairs.
+- **Record shop to jazz club:** a small wooden door in Gerald's Lounge, on the wall right of the doorway from the shop. Coming from the jazz club, you arrive in the lounge with room to walk.
 
 Each door has its own entry under Places in its world, and a Map button in every world brings you back to the overview.
 
